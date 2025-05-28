@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Cuenta } from 'src/model/Cuenta';
 import { Movimiento } from 'src/model/Movimiento';
 import { Between, CustomRepositoryCannotInheritRepositoryError, MoreThan, Repository } from 'typeorm';
 
 
 @Injectable()
 export class MovimientosService {
- constructor(@InjectRepository(Movimiento) private repository:Repository<Movimiento>){
-  
- }
+ constructor(@InjectRepository(Movimiento) private movimientoRepository:Repository<Movimiento>,
+ @InjectRepository(Cuenta) private cuentaRepository:Repository<Cuenta>){}
 
  save(movimiento:Movimiento):void{
-  this.repository.save(movimiento);
+  this.movimientoRepository.save(movimiento);
  }
 
  findByIdCuenta(idCuenta:number):Promise<Movimiento[]>{
-  return this.repository.find({
+  return this.movimientoRepository.find({
     where:{
         cuenta:{
             numeroCuenta:idCuenta
@@ -25,7 +25,7 @@ export class MovimientosService {
   });
  }
  findByCuentasSaldoMin(saldoMin:number):Promise<Movimiento[]>{
-    return this.repository.find({
+    return this.movimientoRepository.find({
       where:{
         cuenta:{
             saldo:MoreThan(saldoMin)
@@ -37,6 +37,11 @@ export class MovimientosService {
 
 
  findByFechas(fecha1:Date,fecha2:Date):Promise<Movimiento[]>{
-  return this.repository.findBy({fecha:Between(fecha1,fecha2)});
+  return this.movimientoRepository.find({
+    where:{
+        fecha:Between(fecha1,fecha2)
+    },
+    relations:["cuenta"]
+    });
  }
 }
