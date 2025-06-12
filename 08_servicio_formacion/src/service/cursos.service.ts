@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CursoAltaDto } from 'src/dtos/CursoAltaDto';
-import { CursoResultadoDto } from 'src/dtos/CursoResultadosDto';
 
+import { CursoResultadoDto } from 'src/dtos/CursoResultadoDto';
 import { Curso } from 'src/model/Curso';
 import { Repository } from 'typeorm';
 
